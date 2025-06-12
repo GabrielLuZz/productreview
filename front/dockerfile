@@ -1,0 +1,28 @@
+# Etapa 1: Instalar dependências
+FROM node:18-alpine AS dependencies
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --legacy-peer-deps
+
+# Etapa 2: Construção (apenas para produção)
+FROM node:18-alpine AS build
+WORKDIR /app
+
+COPY --from=dependencies /app/node_modules ./node_modules
+COPY . .
+
+# Etapa 3: Imagem final
+FROM node:18-alpine AS runtime
+WORKDIR /app
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/public ./public
+COPY package*.json ./
+
+# Variável de ambiente para controlar o comando de execução
+ARG APP_ENV=production
+ENV APP_ENV=${APP_ENV}
+
+# Definir o comando de execução baseado no ambiente
+CMD ["sh", "-c", "if [ \"$APP_ENV\" = \"production\" ]; then npm run build && npm run start; else npm run dev; fi"]
+
+EXPOSE 3000
