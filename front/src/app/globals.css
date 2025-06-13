@@ -99,3 +99,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .wrapper {
+    @apply container mx-auto py-8;
+  }
+}
