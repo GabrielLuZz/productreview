@@ -10,8 +10,9 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, Eye, Edit, Trash2 } from "lucide-react";
+import { Eye, Edit, Trash2, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { formatPrice, renderStars } from "@/lib/utils";
 
 interface ProductCardProps {
   product: Product;
@@ -27,49 +28,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   index,
 }) => {
   const router = useRouter();
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(price);
-  };
-
-  const renderStars = (rating: number) => {
-    const stars = [];
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
-
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(
-        <Star
-          key={`stars-${product._id}-${i}`}
-          className="w-4 h-4 fill-yellow-400 text-yellow-400"
-        />
-      );
-    }
-
-    if (hasHalfStar) {
-      stars.push(
-        <Star
-          key={`half-star-${product._id}`}
-          className="w-4 h-4 fill-yellow-400/50 text-yellow-400"
-        />
-      );
-    }
-
-    const emptyStars = 5 - Math.ceil(rating);
-    for (let i = 0; i < emptyStars; i++) {
-      stars.push(
-        <Star
-          key={`empty-stars-${product._id}-${i}`}
-          className="w-4 h-4 text-gray-300"
-        />
-      );
-    }
-
-    return stars;
-  };
 
   return (
     <Card className="h-full flex flex-col animate-in fade-in-0 slide-in-from-bottom-4 duration-500 hover:shadow-lg transition-all hover:-translate-y-1">
@@ -92,7 +50,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           {product.averageRating !== undefined && (
             <div className="flex items-center gap-2">
               <div className="flex items-center">
-                {renderStars(product.averageRating)}
+                {renderStars(product.averageRating, product._id)}
               </div>
               <span className="text-sm text-muted-foreground">
                 {product.averageRating.toFixed(1)} ({product.totalReviews}{" "}

@@ -7,6 +7,12 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: [
+    "fill-yellow-400",
+    "fill-yellow-400/50",
+    "text-yellow-400",
+    "text-gray-300",
+  ],
   theme: {
     container: {
       center: true,

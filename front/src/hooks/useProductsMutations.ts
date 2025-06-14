@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiService } from "@/services/api";
 import { ProductFormData } from "@/schemas/validationSchemas";
 import { toast } from "sonner";
-import { Product } from "@/types";
+import { CreateProductRequest, Product } from "@/types";
 
 export function useProductsMutations({
   onSuccessCreate,
@@ -18,7 +18,7 @@ export function useProductsMutations({
   const queryClient = useQueryClient();
 
   const createProduct = useMutation({
-    mutationFn: (productData: ProductFormData) =>
+    mutationFn: (productData: CreateProductRequest) =>
       apiService.createProduct(productData),
     onSuccess: async (newProduct: Product) => {
       queryClient.setQueryData(["products"], (products: Product[]) => [
