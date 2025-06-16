@@ -9,8 +9,7 @@ export function useProductsQuery(initialData?: Product[]) {
     queryKey: ["products"],
     queryFn: productGateway.getAll,
     initialData,
-    staleTime: 1000 * 60 * 5, // 5 minutos
+    staleTime: 0, // Sempre re-buscar no cliente para evitar hidratação inconsistente
     refetchOnWindowFocus: true,
-    enabled: false
   });
 }

@@ -1,0 +1,29 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Instalar dependências do sistema
+RUN apk add --no-cache libc6-compat
+
+# Copiar todos os arquivos do projeto
+COPY . .
+
+# Instalar dependências com base no lockfile
+RUN \
+  if [ -f yarn.lock ]; then yarn install --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable && pnpm install --frozen-lockfile; \
+  else echo "Nenhum lockfile encontrado." && exit 1; \
+  fi
+
+# Ambiente de produção
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
+
+# Expor a porta usada pelo Next.js
+EXPOSE 3000
+
+# CMD faz o build do Next.js e depois inicia o servidor
+CMD npm run build && npm start
